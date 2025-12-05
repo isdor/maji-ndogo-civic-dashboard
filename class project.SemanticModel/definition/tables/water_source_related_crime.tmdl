@@ -1,0 +1,99 @@
+table water_source_related_crime
+	lineageTag: c5c4657c-c930-4242-9e7f-69323d263d4d
+
+	column crime_id
+		dataType: string
+		lineageTag: 3c3eef3a-9e2c-4ba9-8f9e-0481903eee65
+		summarizeBy: none
+		sourceColumn: crime_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column time_of_incident
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 865b7a9f-554b-46bf-a7a0-b22a1a2fc1d5
+		summarizeBy: none
+		sourceColumn: time_of_incident
+
+		variation Variation
+			isDefault
+			relationship: f548be8d-d834-4ce4-89d4-a9e059676a4c
+			defaultHierarchy: LocalDateTable_93e4a002-3904-4004-8146-0390e53ff0f8.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column loc_id
+		dataType: string
+		lineageTag: 6040f999-4f34-4d64-8f3a-c8226cd5dda8
+		summarizeBy: none
+		sourceColumn: loc_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column crime_type
+		dataType: string
+		lineageTag: 44a8b30f-379e-4834-b674-f9ca38051f54
+		summarizeBy: none
+		sourceColumn: crime_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column victim_gender
+		dataType: string
+		lineageTag: c870eed6-1050-42e6-8491-ead9bdf4525d
+		summarizeBy: none
+		sourceColumn: victim_gender
+
+		annotation SummarizationSetBy = Automatic
+
+	column Hour_of_day
+		dataType: int64
+		formatString: 0
+		lineageTag: f6621773-d214-473d-8afa-fa5a4b361f0f
+		summarizeBy: sum
+		sourceColumn: Hour_of_day
+
+		annotation SummarizationSetBy = Automatic
+
+	column Day_of_week
+		dataType: int64
+		formatString: 0
+		lineageTag: 33d436f0-f8f4-4d0f-8db1-4d2b6d4c73cc
+		summarizeBy: sum
+		sourceColumn: Day_of_week
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Day Name'
+		dataType: string
+		lineageTag: 8786e0d4-4da9-44ed-9d1e-67594f81f543
+		summarizeBy: none
+		sourceColumn: Day Name
+
+		annotation SummarizationSetBy = Automatic
+
+	partition water_source_related_crime = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\HP\Downloads\Md_water_services_data.xlsx"), null, true),
+				    water_source_related_crime_Sheet = Source{[Item="water_source_related_crime",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(water_source_related_crime_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Column1", Int64.Type}, {"crime_id", type text}, {"time_of_incident", type datetime}, {"loc_id", type text}, {"crime_type", type text}, {"victim_gender", type text}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Column1"}),
+				    #"Inserted Hour" = Table.AddColumn(#"Removed Columns", "Hour", each Time.Hour([time_of_incident]), Int64.Type),
+				    #"Renamed Columns" = Table.RenameColumns(#"Inserted Hour",{{"Hour", "Hour_of_day"}}),
+				    #"Inserted Day of Week" = Table.AddColumn(#"Renamed Columns", "Day of Week", each Date.DayOfWeek([time_of_incident]), Int64.Type),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Inserted Day of Week",{{"Day of Week", "Day_of_Week"}}),
+				    #"Removed Columns1" = Table.RemoveColumns(#"Renamed Columns1",{"Day_of_Week"}),
+				    #"Inserted Day" = Table.AddColumn(#"Removed Columns1", "Day", each Date.Day([time_of_incident]), Int64.Type),
+				    #"Renamed Columns2" = Table.RenameColumns(#"Inserted Day",{{"Day", "Day_of_week"}}),
+				    #"Inserted Day Name" = Table.AddColumn(#"Renamed Columns2", "Day Name", each Date.DayOfWeekName([time_of_incident]), type text)
+				in
+				    #"Inserted Day Name"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

@@ -1,0 +1,57 @@
+table infrastructure_cost
+	lineageTag: 3ae5fd61-9c62-49f2-a9e4-5af9cce4933e
+
+	measure Formatted_change =
+			
+			VAR
+			ChangePct =
+			[Below_Basic_Water_Access_Level] * 100
+			RETURN
+			IF(
+			ChangePct > 0,
+			"+" & FORMAT(ChangePct, "0") & "%",
+			FORMAT(ChangePct, "0") & "%"
+			)
+		lineageTag: e4f5cc46-ce9f-4758-8c28-e323db01c4ac
+
+	column improvement
+		dataType: string
+		lineageTag: d07afa92-90cc-42c4-b773-d388bfa16863
+		summarizeBy: none
+		sourceColumn: improvement
+
+		annotation SummarizationSetBy = Automatic
+
+	column unit_cost_USD
+		dataType: int64
+		formatString: 0
+		lineageTag: 97612f48-868c-4c54-84ee-84d18e71c81a
+		summarizeBy: none
+		sourceColumn: unit_cost_USD
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Rural_adjusted cost' = infrastructure_cost[unit_cost_USD] * 1.5
+		lineageTag: 5ef962d8-6cc3-4657-8b16-3c9afb1eb7bb
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition infrastructure_cost = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\HP\Downloads\Md_water_services_data.xlsx"), null, true),
+				    infrastructure_cost_Sheet = Source{[Item="infrastructure_cost",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(infrastructure_cost_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"improvement", type text}, {"unit_cost_USD", Int64.Type}}),
+				    #"Removed Blank Rows" = Table.SelectRows(#"Changed Type", each not List.IsEmpty(List.RemoveMatchingItems(Record.FieldValues(_), {"", null})))
+				in
+				    #"Removed Blank Rows"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

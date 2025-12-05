@@ -1,0 +1,69 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "97c7a9b57098940b110e",
+  "position": {
+    "x": 1113.9668174962294,
+    "y": 7.7224736048265461,
+    "z": 15000,
+    "height": 192.09653092006033,
+    "width": 166.03318250377075,
+    "tabOrder": 15000
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "water_source"
+                    }
+                  },
+                  "Property": "Below_Basic_Water_Access_Level"
+                }
+              },
+              "queryRef": "water_source.Below_Basic_Water_Access_Level",
+              "nativeQueryRef": "Below_Basic_Water_Access_Level",
+              "hidden": true,
+              "format": "0%;-0%;0%"
+            },
+            {
+              "field": {
+                "NativeVisualCalculation": {
+                  "Language": "dax",
+                  "Expression": "\nVAR\nChangePct =\n[Below_Basic_Water_Access_Level] * 100\nRETURN\nIF(\nChangePct > 0,\n\"+\" & FORMAT(ChangePct, \"0\") & \"%\",\nFORMAT(ChangePct, \"0\") & \"%\"\n)",
+                  "Name": "Formatted_change"
+                }
+              },
+              "queryRef": "select",
+              "nativeQueryRef": "Formatted_change"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "water_source"
+                  }
+                },
+                "Property": "Below_Basic_Water_Access_Level"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

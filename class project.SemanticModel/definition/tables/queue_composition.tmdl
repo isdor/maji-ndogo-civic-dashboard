@@ -1,0 +1,58 @@
+table queue_composition
+	lineageTag: b27facfa-4de7-4687-b195-beeed50593f8
+
+	column record_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 3478095b-fec7-426c-875e-8f9705b2f974
+		summarizeBy: none
+		sourceColumn: record_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column percent_male
+		dataType: double
+		lineageTag: c4106590-8c30-46bd-8db2-ae1d2b81eda3
+		summarizeBy: sum
+		sourceColumn: percent_male
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column percent_female
+		dataType: double
+		lineageTag: 1fc01329-cf8e-4a54-b909-2a466b641c35
+		summarizeBy: sum
+		sourceColumn: percent_female
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column percent_child
+		dataType: double
+		lineageTag: 18ce9112-2372-453f-9412-3b1aab3b3732
+		summarizeBy: sum
+		sourceColumn: percent_child
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition queue_composition = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\HP\Downloads\Md_water_services_data.xlsx"), null, true),
+				    queue_composition_Sheet = Source{[Item="queue_composition",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(queue_composition_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Column1", Int64.Type}, {"record_id", Int64.Type}, {"percent_male", type number}, {"percent_female", type number}, {"percent_child", type number}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Column1"})
+				in
+				    #"Removed Columns"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

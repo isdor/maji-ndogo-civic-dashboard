@@ -1,0 +1,59 @@
+table location
+	lineageTag: 0c7041c3-80ca-4811-a634-8694fef90c35
+
+	column location_id
+		dataType: string
+		lineageTag: ae8e430b-0c73-4fe3-a520-ab004f019401
+		summarizeBy: none
+		sourceColumn: location_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column address
+		dataType: string
+		lineageTag: e49bfb64-0826-45c3-b875-f99c36687eeb
+		summarizeBy: none
+		sourceColumn: address
+
+		annotation SummarizationSetBy = Automatic
+
+	column province_name
+		dataType: string
+		lineageTag: 206cf1ce-8803-49aa-8251-309ced7facab
+		summarizeBy: none
+		sourceColumn: province_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column town_name
+		dataType: string
+		lineageTag: b2feb69c-5171-4c06-8837-228bc96a86f8
+		summarizeBy: none
+		sourceColumn: town_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column location_type
+		dataType: string
+		lineageTag: 06a83bc9-88b6-45b7-8644-4723f0d308b8
+		summarizeBy: none
+		sourceColumn: location_type
+
+		annotation SummarizationSetBy = Automatic
+
+	partition location = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\HP\Downloads\Md_water_services_data.xlsx"), null, true),
+				    location_Sheet = Source{[Item="location",Kind="Sheet"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(location_Sheet,{{"Column1", type text}, {"Column2", type text}, {"Column3", type text}, {"Column4", type text}, {"Column5", type text}}),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Changed Type", [PromoteAllScalars=true]),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Promoted Headers",{{"location_id", type text}, {"address", type text}, {"province_name", type text}, {"town_name", type text}, {"location_type", type text}})
+				in
+				    #"Changed Type1"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

@@ -1,0 +1,90 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "10b708af96f06ba12670",
+  "position": {
+    "x": 801.69851380042462,
+    "y": 298.9384288747346,
+    "z": 8000,
+    "height": 293.50318471337579,
+    "width": 449.7664543524416,
+    "tabOrder": 7000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "project_progress"
+                    }
+                  },
+                  "Property": "improvement"
+                }
+              },
+              "queryRef": "project_progress.improvement",
+              "nativeQueryRef": "improvement"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "project_progress"
+                        }
+                      },
+                      "Property": "Budgeted_improvement_cost"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(project_progress.Budgeted_improvement_cost)",
+              "nativeQueryRef": "Sum of Budgeted_improvement_cost"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "project_progress"
+                  }
+                },
+                "Property": "improvement"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Improvements'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "isHidden": true
+}

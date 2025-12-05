@@ -1,0 +1,74 @@
+table well_pollution
+	lineageTag: f31131f9-6efe-4d41-b09d-d8446d8148fb
+
+	column source_id
+		dataType: string
+		lineageTag: 4f3d6d0b-b5c0-4d1c-a14c-0f2248359b2e
+		summarizeBy: none
+		sourceColumn: source_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 52238537-3522-4d1b-a32e-3f845e1c5bab
+		summarizeBy: none
+		sourceColumn: date
+
+		variation Variation
+			isDefault
+			relationship: f1fd518a-c6a4-44bc-b350-098ca0106170
+			defaultHierarchy: LocalDateTable_e698e8bb-6580-4f92-bf9d-5312289b9dac.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column description
+		dataType: string
+		lineageTag: 2d554e97-b43e-450b-ba70-35c2c2598492
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	column pollutant_ppm
+		dataType: double
+		lineageTag: e0e3de4a-b1c5-4dab-8853-e81ea18439de
+		summarizeBy: sum
+		sourceColumn: pollutant_ppm
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column biological
+		dataType: double
+		lineageTag: f45d886b-cfaf-4ac8-97e7-efd70207d14e
+		summarizeBy: sum
+		sourceColumn: biological
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column results
+		dataType: string
+		lineageTag: a6758d09-b70b-428b-8c84-e536c95a1bb9
+		summarizeBy: none
+		sourceColumn: results
+
+		annotation SummarizationSetBy = Automatic
+
+	partition well_pollution = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\HP\Downloads\Md_water_services_data.xlsx"), null, true),
+				    well_pollution_Sheet = Source{[Item="well_pollution",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(well_pollution_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"source_id", type text}, {"date", type datetime}, {"description", type text}, {"pollutant_ppm", type number}, {"biological", type number}, {"results", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

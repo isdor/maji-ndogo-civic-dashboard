@@ -1,0 +1,29 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["infrastructure_cost","location","project_progress","queue_composition","visits","water_source","well_pollution","water_source_related_crime"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table infrastructure_cost
+ref table DateTableTemplate_3b96f4a8-1427-4296-b432-e826ce9f4dfa
+ref table location
+ref table project_progress
+ref table queue_composition
+ref table visits
+ref table LocalDateTable_e892f84b-8bab-46a8-8d87-67445608c11c
+ref table water_source
+ref table well_pollution
+ref table LocalDateTable_e698e8bb-6580-4f92-bf9d-5312289b9dac
+ref table water_source_related_crime
+ref table LocalDateTable_93e4a002-3904-4004-8146-0390e53ff0f8
+
+ref cultureInfo en-US
+

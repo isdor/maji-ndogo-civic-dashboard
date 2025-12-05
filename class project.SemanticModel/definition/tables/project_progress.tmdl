@@ -1,0 +1,125 @@
+table project_progress
+	lineageTag: 090c2258-7b96-4aa3-ab9c-8439e5a2ea9c
+
+	column project_id
+		dataType: int64
+		formatString: 0
+		lineageTag: b225bcf0-f56d-4f6e-8009-60d38c3544c2
+		summarizeBy: sum
+		sourceColumn: project_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column source_id
+		dataType: string
+		lineageTag: 9b110fbf-3ede-463e-bcde-f395b867e1e7
+		summarizeBy: none
+		sourceColumn: source_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column address
+		dataType: string
+		lineageTag: 6920e650-8e78-4f37-9b00-282be99b2602
+		summarizeBy: none
+		sourceColumn: address
+
+		annotation SummarizationSetBy = Automatic
+
+	column town
+		dataType: string
+		lineageTag: 6c350e25-b403-4887-b3a6-26fa834bf74f
+		summarizeBy: none
+		sourceColumn: town
+
+		annotation SummarizationSetBy = Automatic
+
+	column province
+		dataType: string
+		lineageTag: 8c9f682c-79af-453e-a51c-5bd45d7eb583
+		summarizeBy: none
+		sourceColumn: province
+
+		annotation SummarizationSetBy = Automatic
+
+	column source_type
+		dataType: string
+		lineageTag: 42210d01-8924-4c1d-8ebb-471a1512c33d
+		summarizeBy: none
+		sourceColumn: source_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column improvement
+		dataType: string
+		lineageTag: 107c1c57-c68c-4ff9-8cfb-94b52d2adb09
+		summarizeBy: none
+		sourceColumn: improvement
+
+		annotation SummarizationSetBy = Automatic
+
+	column source_status
+		dataType: string
+		lineageTag: 9efca0f5-ca69-494f-af90-503a14a7d909
+		summarizeBy: none
+		sourceColumn: source_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_of_completion
+		dataType: string
+		lineageTag: 9ffa9e6e-6534-4288-ad0c-3d5980cbba75
+		summarizeBy: none
+		sourceColumn: date_of_completion
+
+		annotation SummarizationSetBy = Automatic
+
+	column comments
+		dataType: string
+		lineageTag: 805eef1a-be51-46d3-bd4c-bec49271fa8c
+		summarizeBy: none
+		sourceColumn: comments
+
+		annotation SummarizationSetBy = Automatic
+
+	column Aggregated_improvements =
+			
+			IF(
+			    CONTAINSSTRING('project_progress'[improvement], "install*tap*nearby"), "Install public tap(s)*",
+			    IF('project_progress'[improvement] == "Diagnose local infrastructure","Repair infrastructure",
+			'project_progress'[improvement]
+			)
+			)
+		lineageTag: 64ba384f-5c12-4ed9-ac4a-e9f07695ba55
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Budgeted_improvement_cost = ```
+			
+			IF(
+			    'project_progress'[town] == "Rural",
+			    RELATED('infrastructure_cost'[Rural_adjusted cost]),
+			    RELATED('infrastructure_cost'[unit_cost_USD])
+			)
+			
+			```
+		formatString: #,0
+		lineageTag: 2eead208-c8a8-4574-9c65-bf223b26d016
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	partition project_progress = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\HP\Downloads\Md_water_services_data.xlsx"), null, true),
+				    project_progress_Sheet = Source{[Item="project_progress",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(project_progress_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"project_id", Int64.Type}, {"source_id", type text}, {"address", type text}, {"town", type text}, {"province", type text}, {"source_type", type text}, {"improvement", type text}, {"source_status", type text}, {"date_of_completion", type any}, {"comments", type any}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

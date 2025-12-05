@@ -1,0 +1,51 @@
+relationship a501b16f-5cba-4d48-94b7-dc800c0842cc
+	joinOnDateBehavior: datePartOnly
+	fromColumn: visits.time_of_record
+	toColumn: LocalDateTable_e892f84b-8bab-46a8-8d87-67445608c11c.Date
+
+relationship f1fd518a-c6a4-44bc-b350-098ca0106170
+	joinOnDateBehavior: datePartOnly
+	fromColumn: well_pollution.date
+	toColumn: LocalDateTable_e698e8bb-6580-4f92-bf9d-5312289b9dac.Date
+
+relationship f548be8d-d834-4ce4-89d4-a9e059676a4c
+	joinOnDateBehavior: datePartOnly
+	fromColumn: water_source_related_crime.time_of_incident
+	toColumn: LocalDateTable_93e4a002-3904-4004-8146-0390e53ff0f8.Date
+
+relationship 44c0064a-ba8c-4519-83eb-9d633ec32ccf
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: project_progress.source_id
+	toColumn: water_source.source_id
+
+relationship 7ee4b178-418c-4c7d-a5d7-43a5ca079b88
+	crossFilteringBehavior: bothDirections
+	fromColumn: visits.source_id
+	toColumn: water_source.source_id
+
+relationship 1f6b5f15-ecbe-4512-af6a-79088c4ad635
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: well_pollution.source_id
+	toColumn: water_source.source_id
+
+relationship 4563dc74-0459-4dee-ae40-7cebddffa99b
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: visits.record_id
+	toColumn: queue_composition.record_id
+
+relationship f7002389-111b-44e9-a156-0b795743519f
+	crossFilteringBehavior: bothDirections
+	fromColumn: visits.location_id
+	toColumn: location.location_id
+
+relationship c72e4bca-190e-4c78-a871-8a84c99a5736
+	fromColumn: water_source_related_crime.loc_id
+	toColumn: location.location_id
+
+relationship da41849b-a70b-11da-8331-174fc3706124
+	fromColumn: project_progress.improvement
+	toColumn: infrastructure_cost.improvement
+

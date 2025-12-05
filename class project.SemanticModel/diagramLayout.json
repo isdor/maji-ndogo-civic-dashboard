@@ -1,0 +1,126 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 210.28570992606029,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 1138.8441861299532,
+            "y": 433.338485543783
+          },
+          "nodeIndex": "infrastructure_cost",
+          "nodeLineageTag": "3ae5fd61-9c62-49f2-a9e4-5af9cce4933e",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 1
+        },
+        {
+          "location": {
+            "x": 662.84418612995319,
+            "y": 17.338485543782951
+          },
+          "nodeIndex": "location",
+          "nodeLineageTag": "0c7041c3-80ca-4811-a634-8694fef90c35",
+          "size": {
+            "height": 205.71428571428572,
+            "width": 234
+          },
+          "zIndex": 7
+        },
+        {
+          "location": {
+            "x": 910.55847184423919,
+            "y": 0
+          },
+          "nodeIndex": "project_progress",
+          "nodeLineageTag": "090c2258-7b96-4aa3-ab9c-8439e5a2ea9c",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 6
+        },
+        {
+          "location": {
+            "x": 10.174542223194351,
+            "y": 0
+          },
+          "nodeIndex": "queue_composition",
+          "nodeLineageTag": "b27facfa-4de7-4687-b195-beeed50593f8",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 2
+        },
+        {
+          "location": {
+            "x": 428.57142857142856,
+            "y": 282.2607414980717
+          },
+          "nodeIndex": "visits",
+          "nodeLineageTag": "4e60c081-e30f-451c-b021-6a96309070d2",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 0,
+            "y": 585.1980490992562
+          },
+          "nodeIndex": "water_source",
+          "nodeLineageTag": "3e4d77b5-1816-4904-8b4e-ff7282bf5321",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 0,
+            "y": 284.28571428571428
+          },
+          "nodeIndex": "water_source_related_crime",
+          "nodeLineageTag": "c5c4657c-c930-4242-9e7f-69323d263d4d",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 5
+        },
+        {
+          "location": {
+            "x": 475.44013918537769,
+            "y": 700.20078061137554
+          },
+          "nodeIndex": "well_pollution",
+          "nodeLineageTag": "f31131f9-6efe-4d41-b09d-d8446d8148fb",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 8
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 70,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

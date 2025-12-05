@@ -1,0 +1,105 @@
+table visits
+	lineageTag: 4e60c081-e30f-451c-b021-6a96309070d2
+
+	column record_id
+		dataType: int64
+		formatString: 0
+		lineageTag: f1bafdba-3b5b-4a3e-93e1-a82be69ddd80
+		summarizeBy: none
+		sourceColumn: record_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column location_id
+		dataType: string
+		lineageTag: 717da164-d5fb-43a1-b3ec-704c267628bc
+		summarizeBy: none
+		sourceColumn: location_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column source_id
+		dataType: string
+		lineageTag: 40d60e52-1849-4801-91a2-ea4f2802ed0b
+		summarizeBy: none
+		sourceColumn: source_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column time_of_record
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 201b5bdd-8853-4326-a48a-ae7db0fffc4f
+		summarizeBy: none
+		sourceColumn: time_of_record
+
+		variation Variation
+			isDefault
+			relationship: a501b16f-5cba-4d48-94b7-dc800c0842cc
+			defaultHierarchy: LocalDateTable_e892f84b-8bab-46a8-8d87-67445608c11c.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column visit_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 370b1a64-cbf2-479d-84a6-f8b53a785e78
+		summarizeBy: sum
+		sourceColumn: visit_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column time_in_queue
+		dataType: int64
+		formatString: 0
+		lineageTag: 56e038f5-b502-4e56-8cd4-fffbb549b1ba
+		summarizeBy: sum
+		sourceColumn: time_in_queue
+
+		annotation SummarizationSetBy = Automatic
+
+	column assigned_employee_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 2d8d4a80-8de2-48b0-9451-651f7a998c9c
+		summarizeBy: sum
+		sourceColumn: assigned_employee_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column Day_Name
+		dataType: string
+		lineageTag: f2a42383-d5cb-479b-b1bf-10f30be93486
+		summarizeBy: none
+		sourceColumn: Day_Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Hour_of_day
+		dataType: int64
+		formatString: 0
+		lineageTag: 1ef710a3-3602-4edc-a91b-9e123136d808
+		summarizeBy: sum
+		sourceColumn: Hour_of_day
+
+		annotation SummarizationSetBy = Automatic
+
+	partition visits = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\HP\Downloads\Md_water_services_data.xlsx"), null, true),
+				    visits_Sheet = Source{[Item="visits",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(visits_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"record_id", Int64.Type}, {"location_id", type text}, {"source_id", type text}, {"time_of_record", type datetime}, {"visit_count", Int64.Type}, {"time_in_queue", Int64.Type}, {"assigned_employee_id", Int64.Type}}),
+				    #"Inserted Day Name" = Table.AddColumn(#"Changed Type", "Day Name", each Date.DayOfWeekName([time_of_record]), type text),
+				    #"Renamed Columns" = Table.RenameColumns(#"Inserted Day Name",{{"Day Name", "Day_Name"}}),
+				    #"Inserted Hour" = Table.AddColumn(#"Renamed Columns", "Hour", each Time.Hour([time_of_record]), Int64.Type),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Inserted Hour",{{"Hour", "Hour_of_day"}})
+				in
+				    #"Renamed Columns1"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

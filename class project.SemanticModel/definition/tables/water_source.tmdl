@@ -1,0 +1,117 @@
+table water_source
+	lineageTag: 3e4d77b5-1816-4904-8b4e-ff7282bf5321
+
+	measure Below_Basic_Water_Access_Level =
+			
+			VAR BelowBasicAccessPopulation =
+			    CALCULATE(
+			        COUNT(water_source[number_of_people_served]),
+			        water_source[Basic_water_access] = "Below Basic Access"
+			    )
+			
+			VAR TotalPopulation =
+			    COUNT(water_source[number_of_people_served])
+			
+			RETURN
+			DIVIDE(BelowBasicAccessPopulation, TotalPopulation)
+		lineageTag: 0d7d69d4-43c1-42ab-b30b-c33ea0eb74cf
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Basic_Water_Access_Level =
+			
+			VAR BasicAccessPopulation =
+			    CALCULATE(
+			        SUM(water_source[number_of_people_served]),
+			        water_source[Basic_water_access] = "Basic Access"
+			    )
+			
+			VAR TotalPopulation =
+			    SUM(water_source[number_of_people_served])
+			
+			RETURN
+			DIVIDE(BasicAccessPopulation, TotalPopulation)
+		lineageTag: b7f812d1-2b41-4abd-8618-49761844c80f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column source_id
+		dataType: string
+		lineageTag: 63bfdfc3-f68e-424a-a1ac-2fdaa42386e6
+		summarizeBy: none
+		sourceColumn: source_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column type_of_water_source
+		dataType: string
+		lineageTag: e04733c7-4af3-42f9-bfe7-8b8945ff5726
+		summarizeBy: none
+		sourceColumn: type_of_water_source
+
+		annotation SummarizationSetBy = Automatic
+
+	column number_of_people_served
+		dataType: int64
+		formatString: 0
+		lineageTag: 4e9737d8-680d-4cc5-8b3e-f1490662a4b7
+		summarizeBy: none
+		sourceColumn: number_of_people_served
+
+		annotation SummarizationSetBy = Automatic
+
+	column Average_queue_time =
+			
+			CALCULATE(
+			AVERAGE('visits'[time_in_queue]), // Calculate the average time in queue
+			FILTER(
+			'visits',
+			'visits'[source_id] = 'water_source'[source_id] // Filter the visits for each specific water source
+			)
+			)
+		lineageTag: 98de3150-618a-4e6d-8453-2b5a67b962e1
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Basic_water_access =
+			
+			IF(
+			AND( // Checks if the water source is a well and if its clean
+			'water_source'[type_of_water_source] == "well",
+			RELATED('well_pollution'[results]) == "Clean"
+			),
+			"Basic Access", // Assigns 'Basic Access' if both conditions are true (clean well)
+			IF( // Checks if the water source is a tap inside the home
+			'water_source'[type_of_water_source] == "tap_in_home",
+			"Basic Access", // Assigns 'Basic Access' if true (tap in home)
+			IF(
+			AND( // Checks if the water source is a shared tap and the average queue time is less than 30 minutes
+			'water_source'[type_of_water_source] == "Shared_tap",
+			'water_source'[Average_queue_time] < 30
+			),
+			"Basic Access", // Assigns 'Basic Access' if both conditions are true (shared tap with queue < 30 min)
+			"Below Basic Access" // Assigns 'Below Basic Access' if none of the above conditions are met
+			)
+			)
+			)
+		lineageTag: e58e6bd6-063b-4884-abc3-78e09480baa6
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition water_source = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\HP\Downloads\Md_water_services_data.xlsx"), null, true),
+				    water_source_Sheet = Source{[Item="water_source",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(water_source_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"source_id", type text}, {"type_of_water_source", type text}, {"number_of_people_served", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

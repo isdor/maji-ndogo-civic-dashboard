@@ -1,0 +1,103 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "3d14bcb08da6c07ceb2e",
+  "position": {
+    "x": 864.44444444444446,
+    "y": 328.88888888888886,
+    "z": 6000,
+    "height": 298.88888888888886,
+    "width": 415.55555555555554,
+    "tabOrder": 6000
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "water_source_related_crime"
+                    }
+                  },
+                  "Property": "Day Name"
+                }
+              },
+              "queryRef": "water_source_related_crime.Day Name",
+              "nativeQueryRef": "Day Name",
+              "active": true
+            }
+          ]
+        },
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "water_source_related_crime"
+                    }
+                  },
+                  "Property": "victim_gender"
+                }
+              },
+              "queryRef": "water_source_related_crime.victim_gender",
+              "nativeQueryRef": "victim_gender"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "water_source_related_crime"
+                        }
+                      },
+                      "Property": "crime_type"
+                    }
+                  },
+                  "Function": 5
+                }
+              },
+              "queryRef": "CountNonNull(water_source_related_crime.crime_type)",
+              "nativeQueryRef": "Count of crime_type"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Aggregation": {
+                "Expression": {
+                  "Column": {
+                    "Expression": {
+                      "SourceRef": {
+                        "Entity": "water_source_related_crime"
+                      }
+                    },
+                    "Property": "crime_type"
+                  }
+                },
+                "Function": 5
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

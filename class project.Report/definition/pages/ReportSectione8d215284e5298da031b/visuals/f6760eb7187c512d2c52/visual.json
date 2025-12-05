@@ -1,0 +1,103 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "f6760eb7187c512d2c52",
+  "position": {
+    "x": 32.222222222222221,
+    "y": 328.88888888888886,
+    "z": 2000,
+    "height": 391.11111111111109,
+    "width": 593.33333333333337,
+    "tabOrder": 2000
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "visits"
+                    }
+                  },
+                  "Property": "Hour_of_day"
+                }
+              },
+              "queryRef": "visits.Hour_of_day",
+              "nativeQueryRef": "Hour_of_day",
+              "active": true
+            }
+          ]
+        },
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "visits"
+                    }
+                  },
+                  "Property": "Day_Name"
+                }
+              },
+              "queryRef": "visits.Day_Name",
+              "nativeQueryRef": "Day_Name"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "visits"
+                        }
+                      },
+                      "Property": "time_in_queue"
+                    }
+                  },
+                  "Function": 1
+                }
+              },
+              "queryRef": "Sum(visits.time_in_queue)",
+              "nativeQueryRef": "Average of time_in_queue"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Aggregation": {
+                "Expression": {
+                  "Column": {
+                    "Expression": {
+                      "SourceRef": {
+                        "Entity": "visits"
+                      }
+                    },
+                    "Property": "time_in_queue"
+                  }
+                },
+                "Function": 1
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
